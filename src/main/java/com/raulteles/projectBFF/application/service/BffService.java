@@ -1,30 +1,28 @@
 package com.raulteles.projectBFF.application.service;
 
 import com.raulteles.projectBFF.application.dto.CustomerDTO;
+import com.raulteles.projectBFF.application.port.input.BffInputPort;
+import com.raulteles.projectBFF.application.port.output.BffOutputPort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Service
-public class BffService {
+public class BffService implements BffInputPort {
 
-    private final WebClient webClient;
+    private final BffOutputPort bffOutputPort;
 
-    public BffService(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://localhost:8080").build();
+    public BffService(BffOutputPort bffOutputPort) {
+        this.bffOutputPort = bffOutputPort;
     }
+
 
     public Mono<CustomerDTO> getCustomerById(Long id) {
-        return webClient.get()
-                .uri("/cliente/{id}", id)
-                .retrieve()
-                .bodyToMono(CustomerDTO.class);
+        return bffOutputPort.getCustomerById(id);
     }
 
+
     public Mono<CustomerDTO> getCustomerByName(String name) {
-        return webClient.get()
-                .uri("/cliente/name/{customerName}", name)
-                .retrieve()
-                .bodyToMono(CustomerDTO.class);
+        return bffOutputPort.getCustomerByName(name);
     }
 }

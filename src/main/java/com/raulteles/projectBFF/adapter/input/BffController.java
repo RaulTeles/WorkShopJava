@@ -1,7 +1,7 @@
-package com.raulteles.projectBFF.controller;
+package com.raulteles.projectBFF.adapter.input;
 
 import com.raulteles.projectBFF.application.dto.CustomerDTO;
-import com.raulteles.projectBFF.application.service.BffService;
+import com.raulteles.projectBFF.application.port.input.BffInputPort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,18 +12,20 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/bff")
 public class BffController {
 
-    private final BffService bffService;
-    public BffController(BffService bffService) {
-        this.bffService = bffService;
+    private final BffInputPort bffInputPort;
+
+    public BffController(BffInputPort bffInputPort) {
+        this.bffInputPort = bffInputPort;
     }
+
 
     @GetMapping("/cliente/{id}")
     public Mono<CustomerDTO> getCustomerById(@PathVariable Long id) {
-         return bffService.getCustomerById(id);
+        return bffInputPort.getCustomerById(id);
     }
 
     @GetMapping("/cliente/name/{customerName}")
     public Mono<CustomerDTO> getCustomerByName(@PathVariable String customerName) {
-        return bffService.getCustomerByName(customerName);
+        return bffInputPort.getCustomerByName(customerName);
     }
 }
